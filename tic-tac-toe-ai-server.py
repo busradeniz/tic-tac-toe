@@ -37,6 +37,38 @@ def new_move(game_id, index):
     games[game_id] = board
     return board
 
+def _new_ai_move_index(board):
+
+    # check if bot can win in the next move
+    for i in range(0,len(board)):
+        board_copy = copy.deepcopy(board)
+        if _is_move_valid(board_copy, i):
+			board_copy[i] = 0
+			if _check_win(board_copy) == 0:
+				return i
+
+    # check if player could win on his next move
+    for i in range(0,len(board)):
+        board_copy = copy.deepcopy(board)
+        if _is_move_valid(board_copy, i):
+            board_copy[i] = 1
+            if _check_win(board_copy) == 1:
+				return i
+
+    # check for space in the corners, and take it
+    move = _choose_random_move(board, [0,2,6,8])
+    if move != None:
+		return move
+
+    # If the middle is free, take it
+    if _is_move_valid(board,4):
+		return 4
+
+
+    # else, take one free space on the sides
+    move = _choose_random_move(board, [1,3,5,7])
+    return move
+
 
 def is_move_invalid(game_id, index):
     board = games[game_id]
