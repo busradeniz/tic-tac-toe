@@ -106,7 +106,7 @@ def _check_win(board):
 
 def end_game(game_id):
     print "Game is ended " + str(game_id)
-
+    del games[game_id]
     return True
 
 def main():
