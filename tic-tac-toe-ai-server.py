@@ -7,10 +7,11 @@ import copy
 
 
 class RequestHandler(SimpleXMLRPCRequestHandler):
-	    rpc_paths = ('/tic-tac-toe',)
+    rpc_paths = ('/tic-tac-toe',)
 
 
 games = {}
+
 
 def new_game():
     game_id = randint(0, 9999999)
@@ -33,49 +34,60 @@ def new_move(game_id, index):
     board[index] = 1
     ai_move_index = _new_ai_move_index(copy.deepcopy(board))
     if ai_move_index != None:
-		board[ai_move_index] = 0
+        board[ai_move_index] = 0
     games[game_id] = board
     return board
 
-def _new_ai_move_index(board):
 
+def _new_ai_move_index(board):
     # check if bot can win in the next move
-    for i in range(0,len(board)):
+    for i in range(0, len(board)):
         board_copy = copy.deepcopy(board)
         if _is_move_valid(board_copy, i):
-			board_copy[i] = 0
-			if _check_win(board_copy) == 0:
-				return i
+            board_copy[i] = 0
+            if _check_win(board_copy) == 0:
+                return i
 
     # check if player could win on his next move
-    for i in range(0,len(board)):
+    for i in range(0, len(board)):
         board_copy = copy.deepcopy(board)
         if _is_move_valid(board_copy, i):
             board_copy[i] = 1
             if _check_win(board_copy) == 1:
-				return i
+                return i
 
     # check for space in the corners, and take it
-    move = _choose_random_move(board, [0,2,6,8])
+    move = _choose_random_move(board, [0, 2, 6, 8])
     if move != None:
-		return move
+        return move
 
     # If the middle is free, take it
-    if _is_move_valid(board,4):
-		return 4
-
+    if _is_move_valid(board, 4):
+        return 4
 
     # else, take one free space on the sides
-    move = _choose_random_move(board, [1,3,5,7])
+    move = _choose_random_move(board, [1, 3, 5, 7])
     return move
+
+def _choose_random_move(board, move_list):
+    possible_winning_moves = []
+    for index in move_list:
+        if _is_move_valid(board, index):
+            possible_winning_moves.append(index)
+
+    if len(possible_winning_moves) != 0:
+        return random.choice(possible_winning_moves)
+    else:
+        return None
 
 
 def is_move_invalid(game_id, index):
     board = games[game_id]
     return board[index] != -1
 
+
 def _is_move_valid(board, index):
-	return board[index] == -1
+    return board[index] == -1
 
 
 def main():
@@ -95,5 +107,6 @@ def main():
         print '...Exiting...'
         quit()
 
+
 if __name__ == "__main__":
-	main()
+    main()
