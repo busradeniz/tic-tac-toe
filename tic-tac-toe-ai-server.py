@@ -5,14 +5,14 @@ import random
 import sys
 import copy
 
-
+# Restrict to a particular path.
 class RequestHandler(SimpleXMLRPCRequestHandler):
     rpc_paths = ('/tic-tac-toe',)
 
-
+# Create Game Hub
 games = {}
 
-
+# Create new game API method
 def new_game():
     game_id = randint(0, 9999999)
 
@@ -25,10 +25,10 @@ def new_game():
     for i in range(9):
         board.append(-1)
     games[game_id] = board
-
+    print "New game is created: " + str(game_id)
     return game_id
 
-
+# Create new move API method
 def new_move(game_id, index):
     board = games[game_id]
     board[index] = 1
@@ -38,7 +38,7 @@ def new_move(game_id, index):
     games[game_id] = board
     return board
 
-
+# Create tic tac toe engine
 def _new_ai_move_index(board):
     # check if bot can win in the next move
     for i in range(0, len(board)):
@@ -80,20 +80,21 @@ def _choose_random_move(board, move_list):
     else:
         return None
 
-
+# method controls move validity
 def is_move_invalid(game_id, index):
     board = games[game_id]
     return board[index] != -1
 
-
+# method controls move validity
 def _is_move_valid(board, index):
     return board[index] == -1
 
-
+# method controls win case
 def check_win(game_id):
     board = games[game_id]
     return _check_win(board)
 
+# method controls win case according to board
 def _check_win(board):
     win_cond = ((1,2,3),(4,5,6),(7,8,9),(1,4,7),(2,5,8),(3,6,9),(1,5,9),(3,5,7))
     for each in win_cond:
@@ -104,11 +105,13 @@ def _check_win(board):
             pass
     return -1
 
+# method ends game
 def end_game(game_id):
     print "Game is ended " + str(game_id)
     del games[game_id]
     return True
 
+# creates server and defines API methods
 def main():
     # Create server
     server = SimpleXMLRPCServer(("localhost", 8000), requestHandler=RequestHandler, logRequests=True)
