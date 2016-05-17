@@ -104,6 +104,10 @@ def _check_win(board):
             pass
     return -1
 
+def end_game(game_id):
+    print "Game is ended " + str(game_id)
+
+    return True
 
 def main():
     # Create server
