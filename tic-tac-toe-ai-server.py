@@ -28,6 +28,14 @@ def new_game():
     return game_id
 
 
+def is_move_invalid(game_id, index):
+    board = games[game_id]
+    return board[index] != -1
+
+def _is_move_valid(board, index):
+	return board[index] == -1
+
+
 def main():
     # Create server
     server = SimpleXMLRPCServer(("localhost", 8000), requestHandler=RequestHandler, logRequests=True)
