@@ -1,8 +1,31 @@
 from SimpleXMLRPCServer import SimpleXMLRPCServer
 from SimpleXMLRPCServer import SimpleXMLRPCRequestHandler
 
+import random
+import sys
+import copy
+
+
 class RequestHandler(SimpleXMLRPCRequestHandler):
 	    rpc_paths = ('/tic-tac-toe',)
+
+
+games = {}
+
+def new_game():
+    game_id = randint(0, 9999999)
+
+    # To be sure unique game_id accross games
+    while game_id in games:
+        game_id = randint(0, 9999999)
+
+    # Creating initial board
+    board = []
+    for i in range(9):
+        board.append(-1)
+    games[game_id] = board
+
+    return game_id
 
 
 def main():
