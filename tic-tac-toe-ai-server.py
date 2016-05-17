@@ -1,5 +1,6 @@
 from SimpleXMLRPCServer import SimpleXMLRPCServer
 from SimpleXMLRPCServer import SimpleXMLRPCRequestHandler
+from random import randint
 
 import random
 import sys
@@ -7,12 +8,11 @@ import copy
 
 # Restrict to a particular path.
 class RequestHandler(SimpleXMLRPCRequestHandler):
-    rpc_paths = ('/tic-tac-toe',)
+	    rpc_paths = ('/tic-tac-toe',)
 
 # Create Game Hub
 games = {}
 
-# Create new game API method
 def new_game():
     game_id = randint(0, 9999999)
 
@@ -28,45 +28,45 @@ def new_game():
     print "New game is created: " + str(game_id)
     return game_id
 
-# Create new move API method
 def new_move(game_id, index):
     board = games[game_id]
     board[index] = 1
     ai_move_index = _new_ai_move_index(copy.deepcopy(board))
     if ai_move_index != None:
-        board[ai_move_index] = 0
+		board[ai_move_index] = 0
     games[game_id] = board
     return board
 
-# Create tic tac toe engine
 def _new_ai_move_index(board):
+
     # check if bot can win in the next move
-    for i in range(0, len(board)):
+    for i in range(0,len(board)):
         board_copy = copy.deepcopy(board)
         if _is_move_valid(board_copy, i):
-            board_copy[i] = 0
-            if _check_win(board_copy) == 0:
-                return i
+			board_copy[i] = 0
+			if _check_win(board_copy) == 0:
+				return i
 
     # check if player could win on his next move
-    for i in range(0, len(board)):
+    for i in range(0,len(board)):
         board_copy = copy.deepcopy(board)
         if _is_move_valid(board_copy, i):
             board_copy[i] = 1
             if _check_win(board_copy) == 1:
-                return i
+				return i
 
     # check for space in the corners, and take it
-    move = _choose_random_move(board, [0, 2, 6, 8])
+    move = _choose_random_move(board, [0,2,6,8])
     if move != None:
-        return move
+		return move
 
     # If the middle is free, take it
-    if _is_move_valid(board, 4):
-        return 4
+    if _is_move_valid(board,4):
+		return 4
+
 
     # else, take one free space on the sides
-    move = _choose_random_move(board, [1, 3, 5, 7])
+    move = _choose_random_move(board, [1,3,5,7])
     return move
 
 def _choose_random_move(board, move_list):
@@ -80,21 +80,17 @@ def _choose_random_move(board, move_list):
     else:
         return None
 
-# method controls move validity
 def is_move_invalid(game_id, index):
     board = games[game_id]
     return board[index] != -1
 
-# method controls move validity
 def _is_move_valid(board, index):
-    return board[index] == -1
+	return board[index] == -1
 
-# method controls win case
 def check_win(game_id):
     board = games[game_id]
     return _check_win(board)
 
-# method controls win case according to board
 def _check_win(board):
     win_cond = ((1,2,3),(4,5,6),(7,8,9),(1,4,7),(2,5,8),(3,6,9),(1,5,9),(3,5,7))
     for each in win_cond:
@@ -105,13 +101,11 @@ def _check_win(board):
             pass
     return -1
 
-# method ends game
 def end_game(game_id):
     print "Game is ended " + str(game_id)
     del games[game_id]
     return True
 
-# creates server and defines API methods
 def main():
     # Create server
     server = SimpleXMLRPCServer(("localhost", 8000), requestHandler=RequestHandler, logRequests=True)
@@ -129,6 +123,5 @@ def main():
         print '...Exiting...'
         quit()
 
-
 if __name__ == "__main__":
-    main()
+	main()
