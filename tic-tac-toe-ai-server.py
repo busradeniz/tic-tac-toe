@@ -28,6 +28,16 @@ def new_game():
     return game_id
 
 
+def new_move(game_id, index):
+    board = games[game_id]
+    board[index] = 1
+    ai_move_index = _new_ai_move_index(copy.deepcopy(board))
+    if ai_move_index != None:
+		board[ai_move_index] = 0
+    games[game_id] = board
+    return board
+
+
 def is_move_invalid(game_id, index):
     board = games[game_id]
     return board[index] != -1
